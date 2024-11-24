@@ -31,7 +31,7 @@ const DEFAULT_INCLUDED_EXTENSIONS = [
 ];
 
 const config = new Conf<ConfigStore>({
-  projectName: 'pmap',
+  projectName: 'projmap',
   defaults: {
     projects: {},
     defaultIgnoredPatterns: DEFAULT_IGNORED_PATTERNS,

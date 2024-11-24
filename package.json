@@ -1,10 +1,10 @@
 {
-    "name": "pmap",
+    "name": "projmap",
     "version": "1.0.0",
     "description": "Fast, configurable project structure documentation generator",
     "type": "module",
     "bin": {
-      "pmap": "dist/cli.js"
+      "projmap": "dist/cli.js"
     },
     "files": [
       "dist"
@@ -24,7 +24,7 @@
       "linux",
       "macos"
     ],
-    "author": "Your Name",
+    "author": "Will Bogusz",
     "license": "MIT",
     "dependencies": {
       "chalk": "^5.3.0",

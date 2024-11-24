@@ -76,7 +76,7 @@ async function initializeProject(currentDir: string, options: any) {
 }
 
 program
-  .name('pmap')
+  .name('projmap')
   .description('Fast project structure documentation generator')
   .version('1.0.0')
   .option('-c, --content', 'Include file contents in the output')

@@ -1,0 +1,29 @@
+{
+    "name": "pmap",
+    "version": "1.0.0",
+    "description": "Fast, configurable project structure documentation generator",
+    "type": "module",
+    "bin": {
+      "pmap": "./dist/cli.js"
+    },
+    "files": [
+      "dist"
+    ],
+    "scripts": {
+      "build": "tsc",
+      "prepare": "npm run build"
+    },
+    "dependencies": {
+      "chalk": "^5.3.0",
+      "commander": "^12.1.0",
+      "conf": "^13.0.1",
+      "clipboardy": "^4.0.0",
+      "inquirer": "^12.1.0",
+      "parse-gitignore": "^2.0.0"
+    },
+    "devDependencies": {
+      "@types/node": "^22.9.3",
+      "@types/inquirer": "^9.0.7",
+      "typescript": "^5.7.2"
+    }
+}

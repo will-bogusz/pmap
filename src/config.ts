@@ -3,6 +3,7 @@ import Conf from 'conf';
 import { join } from 'node:path';
 import { promises as fs } from 'node:fs';
 import { ProjectConfig } from './types.js';
+import { normalizePath, isWindowsPath } from './utils.js';
 
 interface ConfigStore {
   projects: Record<string, ProjectConfig>;
@@ -42,13 +43,13 @@ export async function getProjectConfig(dir: string): Promise<ProjectConfig | und
   const projects = config.get('projects');
   
   // Find the closest parent directory that has a configuration
-  let currentDir = dir;
+  let currentDir = normalizePath(dir);
   while (currentDir) {
     if (projects[currentDir]) {
       return projects[currentDir];
     }
-    const parentDir = join(currentDir, '..');
-    if (parentDir === currentDir) break;
+    const parentDir = normalizePath(join(currentDir, '..'));
+    if (parentDir === currentDir || (isWindowsPath(currentDir) && parentDir.length < currentDir.length)) break;
     currentDir = parentDir;
   }
   
@@ -77,7 +78,7 @@ export function getDefaultConfig(): Pick<ConfigStore, 'defaultIgnoredPatterns' |
 
 export function saveProjectConfig(dir: string, projectConfig: ProjectConfig): void {
   const projects = config.get('projects');
-  projects[dir] = projectConfig;
+  projects[normalizePath(dir)] = projectConfig;
   config.set('projects', projects);
 }
 

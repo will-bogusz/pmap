@@ -2,7 +2,7 @@
 import { promises as fs } from 'node:fs';
 import { join, relative } from 'node:path';
 import { FileNode, ProjectConfig } from './types.js';
-import { sanitizePathForFilename, validateDirectory } from './utils.js';
+import { sanitizePathForFilename, validateDirectory, normalizePath } from './utils.js';
 
 async function getDescription(filePath: string): Promise<string | undefined> {
     if ((await fs.stat(filePath)).isDirectory()) {
@@ -64,8 +64,8 @@ async function mapDirectory(
     for (const entry of entries) {
         if (shouldIgnore(entry.name, config.ignoredPatterns)) continue;
 
-        const fullPath = join(dirPath, entry.name);
-        const relativePath = relative(config.rootDir, fullPath);
+        const fullPath = normalizePath(join(dirPath, entry.name));
+        const relativePath = normalizePath(relative(config.rootDir, fullPath));
 
         if (entry.isDirectory()) {
             const children = await mapDirectory(fullPath, config, indent + 1, includeContent);
@@ -147,7 +147,7 @@ export async function generateProjectMap(
         let outputFileName = 'PROJECT_STRUCTURE.md';
         
         if (targetPath) {
-            const resolvedPath = join(config.rootDir, targetPath);
+            const resolvedPath = normalizePath(join(config.rootDir, targetPath));
             if (!await validateDirectory(resolvedPath)) {
                 throw new Error(`Directory not found: ${targetPath}`);
             }
@@ -168,10 +168,10 @@ export async function generateProjectMap(
         content += `\`\`\`\n${generateMarkdown(structure)}\`\`\`\n`;
 
         const outputDir = config.outputPath ? 
-            join(config.rootDir, config.outputPath) : 
-            join(config.rootDir, 'docs', 'structure');
+            normalizePath(join(config.rootDir, config.outputPath)) : 
+            normalizePath(join(config.rootDir, 'docs', 'structure'));
             
-        const fullOutputPath = join(outputDir, outputFileName);
+        const fullOutputPath = normalizePath(join(outputDir, outputFileName));
 
         return {
             content,

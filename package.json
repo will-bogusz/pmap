@@ -4,26 +4,49 @@
     "description": "Fast, configurable project structure documentation generator",
     "type": "module",
     "bin": {
-      "pmap": "./dist/cli.js"
+      "pmap": "dist/cli.js"
     },
     "files": [
       "dist"
     ],
     "scripts": {
-      "build": "tsc",
-      "prepare": "npm run build"
+      "build": "npx rimraf dist && tsc",
+      "start": "node dist/cli.js",
+      "dev": "tsx src/cli.ts"
     },
+    "keywords": [
+      "project",
+      "structure",
+      "documentation",
+      "generator",
+      "cli",
+      "windows",
+      "linux",
+      "macos"
+    ],
+    "author": "Your Name",
+    "license": "MIT",
     "dependencies": {
       "chalk": "^5.3.0",
+      "clipboardy": "^4.0.0",
       "commander": "^12.1.0",
       "conf": "^13.0.1",
-      "clipboardy": "^4.0.0",
       "inquirer": "^12.1.0",
-      "parse-gitignore": "^2.0.0"
+      "parse-gitignore": "^2.0.0",
+      "rimraf": "^6.0.1"
     },
     "devDependencies": {
-      "@types/node": "^22.9.3",
       "@types/inquirer": "^9.0.7",
+      "@types/node": "^22.9.3",
+      "tsx": "^4.19.2",
       "typescript": "^5.7.2"
-    }
-}
+    },
+    "engines": {
+      "node": ">=16"
+    },
+    "os": [
+      "darwin",
+      "linux",
+      "win32"
+    ]
+  }

@@ -13,6 +13,7 @@ import {
   updateDefaultConfig
 } from './config.js';
 import { generateProjectMap } from './mapper.js';
+import { validateDirectory, normalizePath } from './utils.js';
 
 const program = new Command();
 
@@ -89,6 +90,13 @@ program
   .action(async (targetPath: string | undefined, options) => {
     try {
       const currentDir = process.cwd();
+
+      if (targetPath) {
+        const isValid = await validateDirectory(targetPath);
+        if (!isValid) {
+          throw new Error(`Invalid directory path: ${targetPath}`);
+        }
+      }
       
       if (options.setDefaults) {
         const answers = await inquirer.prompt([
@@ -114,7 +122,7 @@ program
         return;
       }
 
-      let config = await getProjectConfig(currentDir);
+      let config = await getProjectConfig(normalizePath(currentDir));
 
       if (options.init || !config) {
         config = await initializeProject(currentDir, options);

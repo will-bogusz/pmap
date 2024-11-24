@@ -1,6 +1,6 @@
 # pmap
 
-A fast, configurable project structure documentation generator. Instantly create markdown maps of your project's file structure with optional content inclusion.
+A fast, configurable project structure documentation generator. Instantly create markdown maps of your project's file structure with optional content inclusion. Easily copy to clipboard or save to a file with markdown formatting intended to easily be injected into LLM context. Easily grab project structure from subdirectories and optionally include file contents for providing quick project awareness to LLMs prompts.
 
 ## Features
 

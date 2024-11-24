@@ -3,7 +3,7 @@ import { Command } from 'commander';
 import inquirer from 'inquirer';
 import chalk from 'chalk';
 import clipboardy from 'clipboardy';
-import { join, dirname } from 'node:path';
+import { join, dirname, resolve, relative } from 'node:path';
 import { promises as fs } from 'node:fs';
 import { 
   getProjectConfig, 
@@ -91,13 +91,6 @@ program
     try {
       const currentDir = process.cwd();
 
-      if (targetPath) {
-        const isValid = await validateDirectory(targetPath);
-        if (!isValid) {
-          throw new Error(`Invalid directory path: ${targetPath}`);
-        }
-      }
-      
       if (options.setDefaults) {
         const answers = await inquirer.prompt([
           {
@@ -128,9 +121,24 @@ program
         config = await initializeProject(currentDir, options);
       }
 
+      let resolvedTargetPath: string | undefined;
+      if (targetPath) {
+        const absolutePath = resolve(currentDir, targetPath);
+        
+        if (!await validateDirectory(absolutePath)) {
+          throw new Error(`Directory not found: ${targetPath}`);
+        }
+        
+        resolvedTargetPath = relative(config.rootDir, absolutePath);
+        
+        if (resolvedTargetPath.startsWith('..')) {
+          throw new Error('Target directory must be within the project root');
+        }
+      }
+
       const content = await generateProjectMap(
         config,
-        targetPath,
+        resolvedTargetPath,
         options.content ?? config.includeContent
       );
 
@@ -147,7 +155,11 @@ program
         console.log(chalk.green(`Project structure saved to: ${fullOutputPath}`));
       }
     } catch (error) {
-      console.error(chalk.red('Error:'), error);
+      if (error instanceof Error) {
+        console.error(chalk.red('Error:'), error.message);
+      } else {
+        console.error(chalk.red('An unknown error occurred'));
+      }
       process.exit(1);
     }
   });
